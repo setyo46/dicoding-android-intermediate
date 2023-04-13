@@ -28,11 +28,19 @@ class MyButton: AppCompatButton {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+        // Mengubah background dari Button
         background = if (isEnabled) enabledBackground else disableBackground
 
+        // Mengubah warna text pada button
         setTextColor(txtColor)
+
+        // Mengubah ukuran text pada button
         textSize = 12f
+
+        // Menjadikan object pada button menjadi center
         gravity = Gravity.CENTER
+
+        // Mengubah text pada button pada kondisi enable dan disable
         text = if (isEnabled) "Submit" else "Isi Dulu"
     }
 
