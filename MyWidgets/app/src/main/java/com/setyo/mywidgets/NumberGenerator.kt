@@ -2,7 +2,6 @@ package com.setyo.mywidgets
 
 import java.util.*
 
-
 internal object NumberGenerator {
     fun generate(max: Int): Int {
         val random = Random()
