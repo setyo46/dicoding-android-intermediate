@@ -8,16 +8,17 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.core.os.bundleOf
 
-internal class StackRemoteViewsFactory(private val mContext: Context)  :RemoteViewsService.RemoteViewsFactory {
+internal class StackRemoteViewsFactory(private val mContext: Context) : RemoteViewsService.RemoteViewsFactory {
 
 
     private val mWidgetItems = ArrayList<Bitmap>()
 
     override fun onCreate() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onDataSetChanged() {
+        //Ini berfungsi untuk melakukan refresh saat terjadi perubahan.
         mWidgetItems.add(BitmapFactory.decodeResource(mContext.resources, R.drawable.darth_vader))
         mWidgetItems.add(BitmapFactory.decodeResource(mContext.resources, R.drawable.star_wars_logo))
         mWidgetItems.add(BitmapFactory.decodeResource(mContext.resources, R.drawable.storm_trooper))
@@ -26,7 +27,7 @@ internal class StackRemoteViewsFactory(private val mContext: Context)  :RemoteVi
     }
 
     override fun onDestroy() {
-        TODO("Not yet implemented")
+
     }
 
     override fun getCount(): Int = mWidgetItems.size

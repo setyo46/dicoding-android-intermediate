@@ -7,5 +7,4 @@ class StackWidgetService: RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
         StackRemoteViewsFactory(this.applicationContext)
-
 }
