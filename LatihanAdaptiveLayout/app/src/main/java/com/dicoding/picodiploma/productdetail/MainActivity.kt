@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setupView()
         setupAction()
         setUpData()
+
     }
 
     private fun setUpData() {
@@ -35,6 +36,25 @@ class MainActivity : AppCompatActivity() {
                 priceTextView.text = price.withCurrencyFormat()
                 dateTextView.text = getString(R.string.dateFormat, date.withDateFormat())
                 ratingTextView.text = getString(R.string.ratingFormat, rating.withNumberingFormat(), countRating.withNumberingFormat())
+            }
+        }
+        setUpAccessibility(product)
+    }
+
+    private fun setUpAccessibility(productModel: ProductModel) {
+        productModel.apply {
+            binding.apply {
+                settingImageView.contentDescription = getString(R.string.settingDescription)
+                previewImageView.contentDescription = getString(R.string.previewDescription)
+                colorTextView.contentDescription = getString(R.string.colorDescription, color)
+                sizeTextView.contentDescription = getString(R.string.sizeDescription, size)
+                ratingTextView.contentDescription = getString(
+                    R.string.ratingDescription,
+                    rating.withNumberingFormat(),
+                    countRating.withNumberingFormat()
+                )
+                storeTextView.contentDescription = getString(R.string.storeDescription ,store)
+
             }
         }
     }
