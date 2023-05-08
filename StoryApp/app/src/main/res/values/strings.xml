@@ -1,13 +1,22 @@
 <resources>
     <string name="app_name">StoryApp</string>
-    <string name="welcome_title">Selamat datang Dicoding</string>
-    <string name="welcome_desc">Mau belajar Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding aja!</string>
-    <string name="welcome_login">Masuk</string>
-    <string name="welcome_signup">Daftar</string>
-    <string name="copyright">© 2021 Dicoding</string>
-    <string name="title_login">Sudah siap untuk upgrade skill?</string>
-    <string name="login_message">Masukkan dulu datamu ya</string>
+    <string name="welcome_title">Selamat datang StoryApp</string>
+    <string name="welcome_desc">Aplikasi yang berisi Halaman Autentikasi, Daftar Cerita, Tambah Cerita, dan Menampilkan Animasi</string>
+    <string name="login">MASUK</string>
+    <string name="signup">DAFTAR</string>
+    <string name="login_now">Masuk Sekarang</string>
+    <string name="login_desc">Silahkan isi data dibawah ini</string>
+    <string name="register_now">Daftar Sekarang</string>
+    <string name="register_desc">Silahkan lengkapi data di bawah ini untuk mendaftar</string>
     <string name="email_login">Email</string>
     <string name="password_login">Password</string>
-    <string name="login">Login</string>
+    <string name="signup_title">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="signup_name">Nama</string>
+    <string name="required_field">Bagian ini diperlukan!</string>
+    <string name="password_error">Minimal 6 karakter password</string>
+    <string name="logout">Logout</string>
+    <string name="login_success">Login Success</string>
+    <string name="enter_email">Masukkan email kamu</string>
+    <string name="enter_name">Masukkan nama kamu</string>
+    <string name="enter_password">Masukkan password kamu</string>
 </resources>
