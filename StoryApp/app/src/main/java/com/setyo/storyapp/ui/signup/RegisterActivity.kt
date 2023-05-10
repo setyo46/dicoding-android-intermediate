@@ -1,5 +1,7 @@
 package com.setyo.storyapp.ui.signup
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.setyo.storyapp.ui.login.LoginActivity
 import com.setyo.storyapp.R
-import com.setyo.storyapp.ViewModelFactory
+import com.setyo.storyapp.util.ViewModelFactory
 import com.setyo.storyapp.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
@@ -27,6 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         setupView()
         setupViewModel()
         setUpAction()
+        playAnimation()
         showLoading(false)
     }
 
@@ -49,33 +52,59 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setUpAction() {
         binding.apply {
-            buttonSignup.setOnClickListener {
+            buttonRegister.setOnClickListener {
                 if (editTextName.length() == 0 && editTextEmail.length() == 0 && editTextPassword.length() == 0) {
-                    editTextName.error = getString(R.string.required_field)
-                    editTextEmail.error = getString(R.string.required_field)
-                    editTextPassword.setError(getString(R.string.required_field), null)
+                    editTextName.error = getString(R.string.error_textField)
+                    editTextEmail.error = getString(R.string.error_textField)
+                    editTextPassword.setError(getString(R.string.error_textField), null)
                 } else if (editTextName.length() != 0 && editTextEmail.length() != 0 && editTextPassword.length() != 0) {
                     showLoading(true)
                     postText()
+                    showToast()
                     moveActivity()
                 }
             }
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val textViewRegisterNow = ObjectAnimator.ofFloat(binding.textViewRegisterNow, View.ALPHA, 1f).setDuration(500)
+        val textViewRegisterDesc = ObjectAnimator.ofFloat(binding.textViwRegisterDesc, View.ALPHA, 1f).setDuration(500)
+        val editTextLayoutName = ObjectAnimator.ofFloat(binding.editTextLayoutName, View.ALPHA, 1f).setDuration(500)
+        val editTextLayoutEmail = ObjectAnimator.ofFloat(binding.editTextLayoutEmail, View.ALPHA, 1f).setDuration(500)
+        val editTextLayoutPassword = ObjectAnimator.ofFloat(binding.editTextLayoutPassword, View.ALPHA, 1f).setDuration(500)
+        val buttonRegister = ObjectAnimator.ofFloat(binding.buttonRegister, View.ALPHA, 1f).setDuration(500)
+
+
+        AnimatorSet().apply {
+            playSequentially(
+                textViewRegisterNow,
+                textViewRegisterDesc,
+                editTextLayoutName,
+                editTextLayoutEmail,
+                editTextLayoutPassword,
+                buttonRegister
+            )
+            startDelay = 500
+        }.start()
     }
 
     private fun moveActivity() {
         registerViewModel.registerResponse.observe(this@RegisterActivity) {response ->
             if (!response.error) {
-                showToast(response.message)
                 startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
                 finish()
             }
         }
     }
+
+
 
     private fun postText() {
         binding.apply {
@@ -87,8 +116,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun showToast() {
+        registerViewModel.textToast.observe(this@RegisterActivity) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showLoading(state: Boolean) {
-        binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+        registerViewModel.isLoading.observe(this@RegisterActivity) {
+            binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+        }
     }
 
 

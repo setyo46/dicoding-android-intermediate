@@ -11,7 +11,7 @@ import com.setyo.storyapp.model.UserModel
 import com.setyo.storyapp.repository.StoryRepository
 import kotlinx.coroutines.launch
 
-class MainActivityModel(private val repository: StoryRepository): ViewModel() {
+class MainViewModel(private val repository: StoryRepository): ViewModel() {
     val listStory: LiveData<StoriesResponse> = repository.listStory
     val isLoading: LiveData<Boolean> = repository.isLoading
     val textToast: LiveData<String> = repository.textToast

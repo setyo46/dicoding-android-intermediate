@@ -1,22 +1,24 @@
 <resources>
     <string name="app_name">StoryApp</string>
-    <string name="welcome_title">Selamat datang StoryApp</string>
-    <string name="welcome_desc">Aplikasi yang berisi Halaman Autentikasi, Daftar Cerita, Tambah Cerita, dan Menampilkan Animasi</string>
     <string name="login">MASUK</string>
-    <string name="signup">DAFTAR</string>
+    <string name="register">DAFTAR</string>
     <string name="login_now">Masuk Sekarang</string>
     <string name="login_desc">Silahkan isi data dibawah ini</string>
     <string name="register_now">Daftar Sekarang</string>
     <string name="register_desc">Silahkan lengkapi data di bawah ini untuk mendaftar</string>
-    <string name="email_login">Email</string>
-    <string name="password_login">Password</string>
-    <string name="signup_title">Lengkapi data dirimu di bawah ini ya</string>
-    <string name="signup_name">Nama</string>
-    <string name="required_field">Bagian ini diperlukan!</string>
+    <string name="error_textField">Isi terlebih dahulu</string>
     <string name="password_error">Minimal 6 karakter password</string>
     <string name="logout">Logout</string>
     <string name="login_success">Login Success</string>
     <string name="enter_email">Masukkan email kamu</string>
     <string name="enter_name">Masukkan nama kamu</string>
     <string name="enter_password">Masukkan password kamu</string>
+    <string name="greeting">Hi %1$s,</string>
+    <string name="retry">Retry</string>
+    <string name="story">story</string>
+    <string name="dont_have_account">jika tidak memiliki akun </string>
+    <string name="upload">Upload</string>
+    <string name="photo">Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="description">Description</string>
 </resources>

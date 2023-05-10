@@ -1,31 +1,46 @@
-package com.setyo.storyapp
+package com.setyo.storyapp.ui.main
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowInsets
-import android.view.WindowManager
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.setyo.storyapp.R
+import com.setyo.storyapp.adapter.ListStoryAdapter
+import com.setyo.storyapp.adapter.LoadingStateAdapter
+import com.setyo.storyapp.util.ViewModelFactory
 import com.setyo.storyapp.databinding.ActivityMainBinding
+import com.setyo.storyapp.ui.login.LoginActivity
+import com.setyo.storyapp.ui.story.CreateStoryActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var factory: ViewModelFactory
-    private var token = ""
-    private val mainActivityModel: MainActivityModel by viewModels { factory}
+    private lateinit var listStoryAdapter: ListStoryAdapter
+    private val mainViewModel: MainViewModel by viewModels { factory}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        setupView()
+
         setupViewModel()
+        setUpAdapter()
+        setUpAction()
         setUpUser()
+        showLoading(false)
+    }
+
+    private fun setUpAction() {
+       binding.fabCreateStory.setOnClickListener {
+           startActivity(Intent(this, CreateStoryActivity::class.java))
+       }
     }
 
     private fun setupViewModel() {
@@ -34,17 +49,39 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setUpUser() {
-        mainActivityModel.getUser().observe(this@MainActivity) {
-            token = it.token
+        showLoading(true)
+        mainViewModel.getUser().observe(this@MainActivity) {
+            mToken = it.token
             if (!it.isLogin) {
                 moveActivity()
+            } else {
+                setUpData()
             }
         }
+        showToast()
     }
 
     private fun moveActivity() {
-        startActivity(Intent(this@MainActivity, WelcomeActivity::class.java))
+        startActivity(Intent(this@MainActivity, LoginActivity::class.java))
         finish()
+    }
+
+    private fun setUpData() {
+        mainViewModel.getListStories.observe(this@MainActivity) { pagingData ->
+            listStoryAdapter.submitData(lifecycle, pagingData )
+        }
+    }
+
+    private fun setUpAdapter() {
+        listStoryAdapter = ListStoryAdapter()
+        binding.recyclerViewStories.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = listStoryAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    listStoryAdapter.retry()
+                }
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -55,10 +92,26 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item_logout -> {
-                mainActivityModel.logout()
+                mainViewModel.logout()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showToast() {
+        mainViewModel.textToast.observe(this@MainActivity) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showLoading(state: Boolean) {
+        mainViewModel.isLoading.observe(this@MainActivity) {
+            binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+        }
+    }
+
+    companion object {
+        var mToken = "token"
     }
 }

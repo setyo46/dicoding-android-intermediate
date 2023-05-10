@@ -4,9 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.setyo.storyapp.adapter.StoryRemoteMediator
+import com.setyo.storyapp.api.AddNewStoryResponse
 import com.setyo.storyapp.api.ApiService
+import com.setyo.storyapp.api.ListStoryItem
 import com.setyo.storyapp.api.LoginResponse
 import com.setyo.storyapp.api.RegisterResponse
+import com.setyo.storyapp.api.StoriesResponse
 import com.setyo.storyapp.model.UserModel
 import com.setyo.storyapp.util.UserPreference
 import retrofit2.Call
@@ -24,6 +32,12 @@ class StoryRepository constructor(
     private val _loginResponse = MutableLiveData<LoginResponse>()
     val loginResponse: LiveData<LoginResponse> = _loginResponse
 
+    private val _uploadResponse = MutableLiveData<AddNewStoryResponse>()
+    val uploadResponse: LiveData<AddNewStoryResponse> = _uploadResponse
+
+    private val _listStory = MutableLiveData<StoriesResponse>()
+    val listStory: LiveData<StoriesResponse> = _listStory
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
@@ -32,7 +46,7 @@ class StoryRepository constructor(
 
     fun saveDataRegister(name: String, email: String, password: String) {
         _isLoading.value = true
-        apiService.postRegister(name, email, password)
+        apiService.registerUser(name, email, password)
 
         .enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(
@@ -57,27 +71,37 @@ class StoryRepository constructor(
 
     fun saveDataLogin(email: String, password: String) {
         _isLoading.value = true
-        apiService.postLogin(email, password)
+        apiService.loginUser(email, password)
 
-            .enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(
-                    call: Call<LoginResponse>,
-                    response: Response<LoginResponse>
-                ) {
-                    _isLoading.value = false
-                    if (response.isSuccessful) {
-                        _loginResponse.value = response.body()
-                    } else {
-                        _textToast.value = (response.message().toString())
-                        "onFailure: ${response.message()}, ${response.body()?.message.toString()}"
-                    }
+        .enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(
+                call: Call<LoginResponse>,
+                response: Response<LoginResponse>
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _loginResponse.value = response.body()
+                } else {
+                    _textToast.value = (response.message().toString())
+                    "onFailure: ${response.message()}, ${response.body()?.message.toString()}"
                 }
+            }
 
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    _textToast.value = (t.message.toString())
-                    Log.e(TAG, "onFailure: ${t.message.toString()}")
-                }
-            })
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _textToast.value = (t.message.toString())
+                Log.e(TAG, "onFailure: ${t.message.toString()}")
+            }
+        })
+    }
+    fun getStories(): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10
+            ),
+            pagingSourceFactory = {
+                StoryRemoteMediator(preferences, apiService)
+            }
+        ).liveData
     }
 
     fun getUser(): LiveData<UserModel> {

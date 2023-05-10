@@ -9,7 +9,6 @@ import com.setyo.storyapp.model.UserModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-
 class UserPreference private constructor(private val dataStore: DataStore<Preferences>) {
 
     fun getUser(): Flow<UserModel> {
@@ -38,12 +37,12 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
 
     suspend fun logout() {
         dataStore.edit { preferences ->
-            preferences[STATE_KEY] = false
+            preferences.clear()
         }
     }
 
     companion object {
-
+        @Volatile
         private var INSTANCE: UserPreference? = null
         private val NAME_KEY = stringPreferencesKey("name")
         private val TOKEN_KEY = stringPreferencesKey("token")
