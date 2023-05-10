@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (!allPermissionGranted()) {
+//      ActivityCompat.requestPermissions digunakan untuk melakukan permintaan izin (request permission).
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 //        Toast.makeText(this, "Fitur ini belum tersedia", Toast.LENGTH_SHORT).show()
     }
 
+//    Kode onRequestPermissionsResult digunakan untuk menanggapi apakah aplikasi sudah mendapatkan izin atau belum
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
