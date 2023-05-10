@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.mycamera
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
@@ -39,6 +41,7 @@ class CameraActivity : AppCompatActivity() {
         startCamera()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun takePhoto() {
        // takePhoto
         val imageCapture = imageCapture ?: return
@@ -50,17 +53,20 @@ class CameraActivity : AppCompatActivity() {
                 ContextCompat.getMainExecutor(this),
                 object : ImageCapture.OnImageSavedCallback {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        Toast.makeText(
-                            this@CameraActivity,
-                            "Berhasil mengambil gambar",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val intent = Intent()
+                        intent.putExtra("picture", photoFile)
+                        intent.putExtra(
+                            "isBackCamera",
+                            cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
+                        )
+                        setResult(MainActivity.CAMERA_X_RESULT, intent)
+                        finish()
                     }
 
                     override fun onError(exception: ImageCaptureException) {
                         Toast.makeText(
                             this@CameraActivity,
-                            "Berhasil mengambil gambar",
+                            "Gagal mengambil gambar",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
