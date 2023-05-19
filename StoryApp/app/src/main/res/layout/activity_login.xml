@@ -93,7 +93,7 @@
         app:passwordToggleEnabled="true"
         app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
-        <com.setyo.storyapp.customs.CustomEditText
+        <com.setyo.storyapp.custom.CustomEditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

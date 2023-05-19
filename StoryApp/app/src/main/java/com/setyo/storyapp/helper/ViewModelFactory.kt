@@ -1,4 +1,4 @@
-package com.setyo.storyapp.util
+package com.setyo.storyapp.helper
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,7 @@ import com.setyo.storyapp.repository.StoryRepository
 import com.setyo.storyapp.ui.login.LoginViewModel
 import com.setyo.storyapp.ui.main.MainViewModel
 import com.setyo.storyapp.ui.signup.RegisterViewModel
+import com.setyo.storyapp.ui.story.CreateStoryViewModel
 
 class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvider.NewInstanceFactory() {
 
@@ -21,6 +22,9 @@ class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvi
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(CreateStoryViewModel::class.java) -> {
+                CreateStoryViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

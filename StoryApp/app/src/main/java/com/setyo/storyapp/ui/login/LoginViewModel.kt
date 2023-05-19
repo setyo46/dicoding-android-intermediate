@@ -25,9 +25,9 @@ class LoginViewModel(private val repository: StoryRepository): ViewModel(){
         }
     }
 
-    fun login() {
+    fun loginUser() {
         viewModelScope.launch {
-            repository.loginResponse
+            repository.loginUser()
         }
     }
 }

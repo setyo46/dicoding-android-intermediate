@@ -1,10 +1,11 @@
-package com.setyo.storyapp.util
+package com.setyo.storyapp.helper
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.setyo.storyapp.api.ApiConfig
+import com.setyo.storyapp.preference.UserPreference
 import com.setyo.storyapp.repository.StoryRepository
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("token")

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.setyo.storyapp.R
 import com.setyo.storyapp.api.ListStoryItem
 import com.setyo.storyapp.databinding.ActivityDetailBinding
@@ -45,14 +44,10 @@ class DetailActivity : AppCompatActivity() {
             Glide.with(this@DetailActivity)
                 .load(data.photoUrl)
                 .fitCenter()
-                .apply(
-                    RequestOptions
-                        .placeholderOf(R.drawable.ic_loading)
-                ).into(imageDetailPhoto)
+                .placeholder(R.drawable.baseline_cached_24)
+                .into(imageDetailPhoto)
         }
     }
-
-
 
     companion object {
         const val EXTRA_DATA = "extra_data"

@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.setyo.storyapp.ui.main.MainActivity
 import com.setyo.storyapp.R
-import com.setyo.storyapp.util.ViewModelFactory
+import com.setyo.storyapp.helper.ViewModelFactory
 import com.setyo.storyapp.databinding.ActivityLoginBinding
 import com.setyo.storyapp.model.UserModel
 import com.setyo.storyapp.ui.signup.RegisterActivity
@@ -31,9 +31,8 @@ class LoginActivity : AppCompatActivity() {
 
         setupView()
         setupViewModel()
-        setUpAction()
         playAnimation()
-        showLoading(false)
+        setUpAction()
     }
 
     private fun setupView() {
@@ -56,16 +55,21 @@ class LoginActivity : AppCompatActivity() {
     private fun setUpAction() {
         binding.apply {
             buttonLogin.setOnClickListener {
-                if ( editTextEmail.length() == 0 && editTextPassword.length() == 0) {
+                val email = editTextEmail.text.toString()
+                val password = editTextPassword.text.toString()
+
+                if (email.isEmpty() && password.isEmpty()) {
                     editTextEmail.error = getString(R.string.error_textField)
                     editTextPassword.setError(getString(R.string.error_textField), null)
-                } else if (editTextEmail.length() != 0 && editTextPassword.length() != 0) {
+                } else if (email.isNotEmpty() && password.isNotEmpty()) {
+                    showLoading()
                     postText()
-                    moveActivity()
                     showToast()
-                    showLoading(true)
+                    loginViewModel.loginUser()
+                    moveActivity()
                 }
             }
+
             textViewRegisterNow.setOnClickListener {
                 startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
             }
@@ -73,32 +77,42 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun playAnimation() {
-        ObjectAnimator.ofFloat(binding.imageViewLogin, View.TRANSLATION_X, -30f, 30f).apply {
+        val imageViewLogin = binding.imageViewLogin
+        val textViewLoginNow = binding.textViewLoginNow
+        val textViewLoginDesc = binding.textViewLoginDesc
+        val editTextLayoutEmail = binding.editTextLayoutEmail
+        val editTextLayoutPassword = binding.editTextLayoutPassword
+        val buttonLogin = binding.buttonLogin
+        val textViewNoAcc = binding.textViewNoAcc
+        val textViewRegisterNow = binding.textViewRegisterNow
+
+        val translationAnimator = ObjectAnimator.ofFloat(imageViewLogin, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
             repeatCount = ObjectAnimator.INFINITE
             repeatMode = ObjectAnimator.REVERSE
-        }.start()
+        }
 
-        val textViewLoginNow = ObjectAnimator.ofFloat(binding.textViewLoginNow, View.ALPHA, 1f).setDuration(500)
-        val textViewLoginDesc = ObjectAnimator.ofFloat(binding.textViewLoginDesc, View.ALPHA, 1f).setDuration(500)
-        val editTextLayoutEmail = ObjectAnimator.ofFloat(binding.editTextLayoutEmail, View.ALPHA, 1f).setDuration(500)
-        val editTextLayoutPassword = ObjectAnimator.ofFloat(binding.editTextLayoutPassword, View.ALPHA, 1f).setDuration(500)
-        val buttonLogin = ObjectAnimator.ofFloat(binding.buttonLogin, View.ALPHA, 1f).setDuration(500)
-        val textViewNoAcc = ObjectAnimator.ofFloat(binding.textViewNoAcc, View.ALPHA, 1f).setDuration(500)
-        val textViewRegisterNow = ObjectAnimator.ofFloat(binding.textViewRegisterNow, View.ALPHA, 1f).setDuration(500)
+        val alphaAnimator = ObjectAnimator.ofFloat(
+            textViewLoginNow,
+            View.ALPHA,
+            1f
+        ).setDuration(500)
 
-
-        AnimatorSet().apply {
+        val animatorSet = AnimatorSet().apply {
             playSequentially(
-                textViewLoginNow,
-                textViewLoginDesc,
-                editTextLayoutEmail,
-                editTextLayoutPassword,
-                buttonLogin,
-                textViewNoAcc,
-                textViewRegisterNow
+                alphaAnimator,
+                ObjectAnimator.ofFloat(textViewLoginDesc, View.ALPHA, 1f).setDuration(500),
+                ObjectAnimator.ofFloat(editTextLayoutEmail, View.ALPHA, 1f).setDuration(500),
+                ObjectAnimator.ofFloat(editTextLayoutPassword, View.ALPHA, 1f).setDuration(500),
+                ObjectAnimator.ofFloat(buttonLogin, View.ALPHA, 1f).setDuration(500),
+                ObjectAnimator.ofFloat(textViewNoAcc, View.ALPHA, 1f).setDuration(500),
+                ObjectAnimator.ofFloat(textViewRegisterNow, View.ALPHA, 1f).setDuration(500)
             )
             startDelay = 500
+        }
+
+        AnimatorSet().apply {
+            playTogether(translationAnimator, animatorSet)
         }.start()
     }
     private fun moveActivity() {
@@ -139,12 +153,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(state: Boolean) {
-        loginViewModel.isLoading.observe(this@LoginActivity) {
-            binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+    private fun showLoading() {
+        loginViewModel.isLoading.observe(this@LoginActivity) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
-
 
     companion object {
         private const val AUTH_KEY = "Bearer "

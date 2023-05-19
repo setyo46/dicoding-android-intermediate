@@ -1,4 +1,4 @@
-package com.setyo.storyapp.util
+package com.setyo.storyapp.preference
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -29,13 +29,13 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         }
     }
 
-    suspend fun login() {
+    suspend fun loginUser() {
         dataStore.edit { preferences ->
             preferences[STATE_KEY] = true
         }
     }
 
-    suspend fun logout() {
+    suspend fun logoutUser() {
         dataStore.edit { preferences ->
             preferences.clear()
         }

@@ -10,35 +10,34 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.setyo.storyapp.R
 import com.setyo.storyapp.api.ListStoryItem
 import com.setyo.storyapp.databinding.ItemRowStoryBinding
 import com.setyo.storyapp.ui.detail.DetailActivity
 import com.setyo.storyapp.ui.detail.DetailActivity.Companion.EXTRA_DATA
 
-class ListStoryAdapter: PagingDataAdapter<ListStoryItem, ListStoryAdapter.ListViewHolder>(ITEM_CALLBACK) {
+class StoryAdapter: PagingDataAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-       val story = getItem(position)
+    override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
+        val story = getItem(position)
         if (story != null) {
             holder.bind(story)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val binding = ItemRowStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ListViewHolder(binding)
+        return StoryViewHolder(binding)
     }
 
-    class ListViewHolder(private val binding: ItemRowStoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class StoryViewHolder(private val binding: ItemRowStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             binding.apply {
                 textViewItemName.text = story.name
                 Glide.with(itemView.context)
                     .load(story.photoUrl)
                     .fitCenter()
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading))
+                    .placeholder(R.drawable.baseline_cached_24)
                     .into(imageViewPhoto)
 
                 itemView.setOnClickListener {
@@ -49,7 +48,7 @@ class ListStoryAdapter: PagingDataAdapter<ListStoryItem, ListStoryAdapter.ListVi
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                             itemView.context as Activity,
                             Pair(imageViewPhoto, "story"),
-                            Pair(textViewItemName, "name"),
+                            Pair(textViewItemName, "name")
                         )
                     itemView.context.startActivity(intent, optionsCompat.toBundle())
                 }
@@ -58,20 +57,13 @@ class ListStoryAdapter: PagingDataAdapter<ListStoryItem, ListStoryAdapter.ListVi
     }
 
     companion object {
-        private val ITEM_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
-            override fun areItemsTheSame(
-                oldItem: ListStoryItem,
-                newItem: ListStoryItem
-            ): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+            override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(
-                oldItem: ListStoryItem,
-                newItem: ListStoryItem
-            ): Boolean {
-               return oldItem.name == newItem.name && oldItem.description == newItem.description &&
-                       oldItem.photoUrl == newItem.photoUrl
+            override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+                return oldItem.name == newItem.name && oldItem.description == newItem.description && oldItem.photoUrl == newItem.photoUrl
             }
         }
     }

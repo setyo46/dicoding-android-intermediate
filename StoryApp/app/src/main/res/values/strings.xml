@@ -7,7 +7,7 @@
     <string name="register_now">Daftar Sekarang</string>
     <string name="register_desc">Silahkan lengkapi data di bawah ini untuk mendaftar</string>
     <string name="error_textField">Isi terlebih dahulu</string>
-    <string name="password_error">Minimal 6 karakter password</string>
+    <string name="password_error">Minimal 8 karakter password</string>
     <string name="logout">Logout</string>
     <string name="login_success">Login Success</string>
     <string name="enter_email">Masukkan email kamu</string>
@@ -16,9 +16,11 @@
     <string name="greeting">Hi %1$s,</string>
     <string name="retry">Retry</string>
     <string name="story">story</string>
+    <string name="description_null">Tambahkan deskripsi sebelum mengunggah.</string>
     <string name="dont_have_account">jika tidak memiliki akun </string>
     <string name="upload">Upload</string>
     <string name="photo">Photo</string>
     <string name="gallery">Gallery</string>
     <string name="description">Description</string>
+    <string name="add_photo">Menambah photo</string>
 </resources>

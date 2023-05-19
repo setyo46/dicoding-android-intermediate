@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.setyo.storyapp.R
-import com.setyo.storyapp.adapter.ListStoryAdapter
+import com.setyo.storyapp.adapter.StoryAdapter
 import com.setyo.storyapp.adapter.LoadingStateAdapter
-import com.setyo.storyapp.util.ViewModelFactory
+import com.setyo.storyapp.helper.ViewModelFactory
 import com.setyo.storyapp.databinding.ActivityMainBinding
 import com.setyo.storyapp.ui.login.LoginActivity
 import com.setyo.storyapp.ui.story.CreateStoryActivity
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var factory: ViewModelFactory
-    private lateinit var listStoryAdapter: ListStoryAdapter
+    private lateinit var listStoryAdapter: StoryAdapter
     private val mainViewModel: MainViewModel by viewModels { factory}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         setUpAdapter()
         setUpAction()
         setUpUser()
-        showLoading(false)
     }
 
     private fun setUpAction() {
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setUpUser() {
-        showLoading(true)
+        showLoading()
         mainViewModel.getUser().observe(this@MainActivity) {
             mToken = it.token
             if (!it.isLogin) {
@@ -73,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpAdapter() {
-        listStoryAdapter = ListStoryAdapter()
+        listStoryAdapter = StoryAdapter()
         binding.recyclerViewStories.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = listStoryAdapter.withLoadStateFooter(
@@ -92,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item_logout -> {
-                mainViewModel.logout()
+                mainViewModel.logoutUser()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -105,9 +104,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(state: Boolean) {
-        mainViewModel.isLoading.observe(this@MainActivity) {
-            binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
+    private fun showLoading() {
+        mainViewModel.isLoading.observe(this@MainActivity) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 
