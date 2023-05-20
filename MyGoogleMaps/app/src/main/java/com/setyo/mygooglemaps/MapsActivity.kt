@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.setyo.mygooglemaps.databinding.ActivityMapsBinding
 
@@ -30,6 +31,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private val boundsBuilder = LatLngBounds.builder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +100,43 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         getMyLocation()
+        getAddManyMarker()
+    }
+
+    data class TourismPlace(
+        val name: String,
+        val latitude: Double,
+        val longitude: Double
+
+    )
+
+    private fun getAddManyMarker() {
+        val tourismPlace = listOf(
+            TourismPlace("Floating Market Lembang", -6.8168954,107.6151046),
+            TourismPlace("The Great Asia Africa", -6.8331128,107.6048483),
+            TourismPlace("Rabbit Town", -6.8668408,107.608081),
+            TourismPlace("Alun-Alun Kota Bandung", -6.9218518,107.6025294),
+            TourismPlace("Orchid Forest Cikole", -6.780725, 107.637409),
+        )
+        tourismPlace.forEach {tourism ->
+            val latLng = LatLng(tourism.latitude, tourism.longitude)
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .title(tourism.name)
+            )
+            boundsBuilder.include(latLng)
+        }
+
+        val bounds: LatLngBounds = boundsBuilder.build()
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds,
+                resources.displayMetrics.widthPixels,
+                resources.displayMetrics.heightPixels,
+                300
+            )
+        )
     }
 
     private val requestPermissionLauncher =
